@@ -1,17 +1,16 @@
-/* eslint-disable no-undef */
-
 const devCerts = require("office-addin-dev-certs");
 const CopyWebpackPlugin = require("copy-webpack-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const webpack = require("webpack");
+const path = require("path");
+const dotenv = require('dotenv');
 
-const urlDev = "https://localhost:3000/";
-const urlProd = "https://www.contoso.com/"; // CHANGE THIS TO YOUR PRODUCTION DEPLOYMENT LOCATION
-
-async function getHttpsOptions() {
-  const httpsOptions = await devCerts.getHttpsServerOptions();
-  return { ca: httpsOptions.ca, key: httpsOptions.key, cert: httpsOptions.cert };
-}
+// Load environment variables from .env file
+const env = dotenv.config().parsed || {};
+const envKeys = Object.keys(env).reduce((prev, next) => {
+  prev[`process.env.${next}`] = JSON.stringify(env[next]);
+  return prev;
+}, {});
 
 module.exports = async (env, options) => {
   const dev = options.mode === "development";
@@ -19,26 +18,20 @@ module.exports = async (env, options) => {
     devtool: "source-map",
     entry: {
       polyfill: ["core-js/stable", "regenerator-runtime/runtime"],
-      react: ["react", "react-dom"],
-      taskpane: {
-        import: ["./src/taskpane/index.jsx", "./src/taskpane/taskpane.html"],
-        dependOn: "react",
-      },
-      commands: "./src/commands/commands.js",
+      taskpane: ["react-hot-loader/patch", "./src/taskpane/taskpane.tsx"],
     },
     output: {
-      clean: true,
+      path: path.resolve(__dirname, "dist"),
+      filename: "[name].[contenthash].js",
     },
     resolve: {
-      extensions: [".js", ".jsx", ".html"],
+      extensions: [".ts", ".tsx", ".html", ".js"],
     },
     module: {
       rules: [
         {
-          test: /\.jsx?$/,
-          use: {
-            loader: "babel-loader",
-          },
+          test: /\.tsx?$/,
+          use: ["react-hot-loader/webpack", "ts-loader"],
           exclude: /node_modules/,
         },
         {
@@ -47,7 +40,7 @@ module.exports = async (env, options) => {
           use: "html-loader",
         },
         {
-          test: /\.(png|jpg|jpeg|ttf|woff|woff2|gif|ico)$/,
+          test: /\.(png|jpg|jpeg|gif|ico)$/,
           type: "asset/resource",
           generator: {
             filename: "assets/[name][ext][query]",
@@ -56,49 +49,30 @@ module.exports = async (env, options) => {
       ],
     },
     plugins: [
-      new HtmlWebpackPlugin({
-        filename: "taskpane.html",
-        template: "./src/taskpane/taskpane.html",
-        chunks: ["polyfill", "taskpane", "react"],
-      }),
       new CopyWebpackPlugin({
         patterns: [
           {
             from: "assets/*",
             to: "assets/[name][ext][query]",
           },
-          {
-            from: "manifest*.xml",
-            to: "[name]" + "[ext]",
-            transform(content) {
-              if (dev) {
-                return content;
-              } else {
-                return content.toString().replace(new RegExp(urlDev, "g"), urlProd);
-              }
-            },
-          },
         ],
       }),
       new HtmlWebpackPlugin({
-        filename: "commands.html",
-        template: "./src/commands/commands.html",
-        chunks: ["polyfill", "commands"],
+        filename: "taskpane.html",
+        template: "./src/taskpane/taskpane.html",
+        chunks: ["polyfill", "taskpane"],
       }),
-      new webpack.ProvidePlugin({
-        Promise: ["es6-promise", "Promise"],
-      }),
+      new webpack.DefinePlugin(envKeys),
     ],
     devServer: {
-      hot: true,
       headers: {
         "Access-Control-Allow-Origin": "*",
       },
       server: {
         type: "https",
-        options: env.WEBPACK_BUILD || options.https !== undefined ? options.https : await getHttpsOptions(),
+        options: env.WEBPACK_BUILD || options.https !== undefined ? options.https : await devCerts.getHttpsServerOptions(),
       },
-      port: process.env.npm_package_config_dev_server_port || 3000,
+      port: process.env.PORT || 3000,
     },
   };
 

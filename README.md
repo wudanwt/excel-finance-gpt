@@ -1,38 +1,150 @@
-# Office-Addin-TaskPane-React-JS
+# Excel Finance GPT
 
-This repository contains the source code used by the [Yo Office generator](https://github.com/OfficeDev/generator-office) when you create a new Office Add-in that appears in the task pane. You can also use this repository as a sample to base your own project from if you choose not to use the generator.
+An Excel add-in that leverages OpenAI-compatible APIs to analyze financial data directly within Excel spreadsheets.
 
-## JavaScript
+## Features
 
-This template is written using JavaScript. For the [TypeScript](http://www.typescriptlang.org/) version of this template, go to [Office-Addin-TaskPane-React](https://github.com/OfficeDev/Office-Addin-TaskPane-React).
+- Financial data analysis using GPT models
+- Trend analysis for time-series data
+- Risk assessment for financial metrics
+- Real-time AI-powered insights
+- Native Excel integration
+- Support for custom OpenAI-compatible API endpoints
 
-## Debugging
+## Prerequisites
 
-This template supports debugging using any of the following techniques:
+- Node.js (v14 or higher)
+- npm (v6 or higher)
+- Microsoft Excel (2016 or higher)
+- Access to an OpenAI-compatible API endpoint
 
-- [Use a browser's developer tools](https://learn.microsoft.com/office/dev/add-ins/testing/debug-add-ins-in-office-online)
-- [Attach a debugger from the task pane](https://learn.microsoft.com/office/dev/add-ins/testing/attach-debugger-from-task-pane)
-- [Use F12 developer tools on Windows 10](https://learn.microsoft.com/office/dev/add-ins/testing/debug-add-ins-using-f12-developer-tools-on-windows-10)
+## Quick Start
 
-## Questions and comments
+1. Clone the repository:
+```bash
+git clone https://github.com/yourusername/excel-finance-gpt.git
+cd excel-finance-gpt
+```
 
-We'd love to get your feedback about this sample. You can send your feedback to us in the *Issues* section of this repository.
+2. Install dependencies:
+```bash
+npm install
+```
 
-Questions about Office Add-ins development in general should be posted to [Microsoft Q&A](https://learn.microsoft.com/answers/questions/185087/questions-about-office-add-ins.html). If your question is about the Office JavaScript APIs, make sure it's tagged with [office-js-dev].
+3. Set up environment variables:
+```bash
+cp .env.example .env
+```
 
-## Join the Microsoft 365 Developer Program
+4. Configure your API endpoint:
+Edit `.env` and set the following variables:
+```
+OPENAI_API_URL=your_api_endpoint_url
+OPENAI_API_KEY=your_api_key
+OPENAI_API_MODEL=your_model_name
+```
 
-Join the [Microsoft 365 Developer Program](https://aka.ms/m365devprogram) to get resources and information to help you build solutions for the Microsoft 365 platform, including recommendations tailored to your areas of interest.
+5. Start the development server:
+```bash
+npm run dev
+```
 
-You might also qualify for a free developer subscription that's renewable for 90 days and comes configured with sample data; for details, see the [FAQ](https://learn.microsoft.com/office/developer-program/microsoft-365-developer-program-faq#who-qualifies-for-a-microsoft-365-e5-developer-subscription-).
+## API Configuration Options
 
-## Additional resources
+The add-in supports any API endpoint that follows the OpenAI API specification:
 
-- [Office Add-ins documentation](https://learn.microsoft.com/office/dev/add-ins/overview/office-add-ins)
-- More Office Add-ins samples at [OfficeDev on Github](https://github.com/officedev)
+1. Default OpenAI API:
+```
+OPENAI_API_URL=https://api.openai.com/v1
+```
 
-This project has adopted the [Microsoft Open Source Code of Conduct](https://opensource.microsoft.com/codeofconduct/). For more information, see the [Code of Conduct FAQ](https://opensource.microsoft.com/codeofconduct/faq/) or contact [opencode@microsoft.com](mailto:opencode@microsoft.com) with any additional questions or comments.
+2. Custom API endpoint:
+```
+OPENAI_API_URL=https://your-custom-endpoint.com/v1
+```
 
-## Copyright
+Make sure your API endpoint implements the OpenAI API specification for the completions endpoint.
 
-Copyright (c) 2021 Microsoft Corporation. All rights reserved.
+## Development Commands
+
+- `npm run build` - Build for production
+- `npm run build:dev` - Build for development
+- `npm start` - Start development server
+- `npm run dev` - Start development server with hot reload
+- `npm run lint` - Run ESLint
+- `npm run validate` - Validate the manifest
+- `npm run clean` - Clean build directories
+
+## Project Structure
+
+```
+excel-finance-gpt/
+├── src/
+│   ├── taskpane/          # Main application components
+│   ├── services/          # Excel and API services
+│   ├── utils/             # Utility functions
+│   ├── types/             # TypeScript type definitions
+│   └── config/           # Application configuration
+├── assets/               # Static assets
+├── scripts/              # Build and utility scripts
+└── manifest.xml         # Add-in manifest
+```
+
+## Using the Add-in
+
+1. Start Excel
+2. Go to Insert > Office Add-ins
+3. Browse to the manifest file in your project
+4. Select data range in Excel
+5. Choose analysis type
+6. Click "Analyze" to get AI-powered insights
+
+## Configuration Options
+
+Edit `.env` file to configure:
+
+- `OPENAI_API_URL` - Your API endpoint URL
+- `OPENAI_API_KEY` - Your API key
+- `OPENAI_API_MODEL` - Model name to use
+- `DEBUG` - Enable debug logging
+- `API_TIMEOUT` - API request timeout
+- `MAX_TOKENS` - Maximum tokens for API requests
+
+## Troubleshooting
+
+Common issues:
+
+1. **Add-in not loading**
+   - Check if development server is running
+   - Verify manifest path is correct
+   - Check console for errors
+
+2. **Analysis fails**
+   - Verify API endpoint is correctly configured
+   - Check API key is valid
+   - Ensure selected range format is valid
+   - Check internet connectivity
+
+3. **API Issues**
+   - Verify API endpoint follows OpenAI specification
+   - Check API response format matches OpenAI format
+   - Validate API key permissions
+
+## Contributing
+
+1. Fork the repository
+2. Create your feature branch
+3. Commit your changes
+4. Push to the branch
+5. Create a Pull Request
+
+## License
+
+MIT
+
+## Support
+
+Create an issue in the GitHub repository for:
+- Bug reports
+- Feature requests
+- General questions
