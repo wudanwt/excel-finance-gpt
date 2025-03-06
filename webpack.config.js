@@ -19,61 +19,84 @@ module.exports = async (env, options) => {
     entry: {
       polyfill: ["core-js/stable", "regenerator-runtime/runtime"],
       taskpane: ["react-hot-loader/patch", "./src/taskpane/taskpane.tsx"],
+      commands: "./src/commands/commands.js"
     },
     output: {
       path: path.resolve(__dirname, "dist"),
       filename: "[name].[contenthash].js",
+      clean: true
     },
     resolve: {
-      extensions: [".ts", ".tsx", ".html", ".js"],
+      extensions: [".ts", ".tsx", ".html", ".js"]
     },
     module: {
       rules: [
         {
           test: /\.tsx?$/,
           use: ["react-hot-loader/webpack", "ts-loader"],
-          exclude: /node_modules/,
+          exclude: /node_modules/
         },
         {
           test: /\.html$/,
           exclude: /node_modules/,
-          use: "html-loader",
+          use: "html-loader"
         },
         {
           test: /\.(png|jpg|jpeg|gif|ico)$/,
           type: "asset/resource",
           generator: {
-            filename: "assets/[name][ext][query]",
-          },
-        },
-      ],
+            filename: "assets/[name][ext][query]"
+          }
+        }
+      ]
     },
     plugins: [
       new CopyWebpackPlugin({
         patterns: [
           {
             from: "assets/*",
-            to: "assets/[name][ext][query]",
+            to: "assets/[name][ext][query]"
           },
-        ],
+          {
+            from: "manifest*.xml",
+            to: "[name]" + "[ext]",
+            transform(content) {
+              if (dev) {
+                return content;
+              } else {
+                return content.toString().replace(new RegExp("https://localhost:3000", "g"), "https://www.contoso.com");
+              }
+            }
+          }
+        ]
       }),
       new HtmlWebpackPlugin({
         filename: "taskpane.html",
         template: "./src/taskpane/taskpane.html",
-        chunks: ["polyfill", "taskpane"],
+        chunks: ["polyfill", "taskpane"]
       }),
-      new webpack.DefinePlugin(envKeys),
+      new HtmlWebpackPlugin({
+        filename: "commands.html",
+        template: "./src/commands/commands.html",
+        chunks: ["polyfill", "commands"]
+      }),
+      new webpack.DefinePlugin(envKeys)
     ],
     devServer: {
       headers: {
-        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Origin": "*"
       },
       server: {
         type: "https",
-        options: env.WEBPACK_BUILD || options.https !== undefined ? options.https : await devCerts.getHttpsServerOptions(),
+        options: env.WEBPACK_BUILD || options.https !== undefined ? options.https : await devCerts.getHttpsServerOptions()
       },
       port: process.env.PORT || 3000,
-    },
+      hot: true,
+      static: {
+        directory: path.join(__dirname, "dist"),
+        publicPath: "/"
+      }
+    }
   };
 
   return config;

@@ -30,9 +30,10 @@ export const config: Config = {
       key: process.env.OPENAI_API_KEY || "",
       timeout: parseInt(process.env.API_TIMEOUT || "30000"),
       maxTokens: parseInt(process.env.MAX_TOKENS || "1000"),
-      model: process.env.OPENAI_API_MODEL || "text-davinci-003",
+      model: process.env.OPENAI_API_MODEL || "grok-2",
       defaultHeaders: {
         "Content-Type": "application/json",
+        "X-API-Version": "2023-05-01"  // 添加API版本header
       }
     }
   },
@@ -41,6 +42,16 @@ export const config: Config = {
     isDebug: process.env.DEBUG === "true"
   }
 };
+
+if (config.env.isDevelopment) {
+  console.log('Development mode enabled');
+  console.log('API Configuration:', {
+    baseUrl: config.api.openai.baseUrl,
+    model: config.api.openai.model,
+    timeout: config.api.openai.timeout,
+    hasApiKey: !!config.api.openai.key
+  });
+}
 
 if (!config.api.openai.key) {
   console.warn("OpenAI API key is not configured. Please set OPENAI_API_KEY environment variable.");

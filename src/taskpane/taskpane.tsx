@@ -1,11 +1,7 @@
-import App from "./components/App";
-import { AppContainer } from "react-hot-loader";
-import { initializeIcons } from "@fluentui/font-icons-mdl2";
-import { ThemeProvider } from "@fluentui/react";
 import * as React from "react";
 import * as ReactDOM from "react-dom";
-import { logger } from "../utils/logger";
-
+import { initializeIcons } from "@fluentui/font-icons-mdl2";
+import { App } from "./components/App";
 /* global document, Office, module, require */
 
 initializeIcons();
@@ -14,17 +10,9 @@ let isOfficeInitialized = false;
 
 const title = "Excel Finance GPT";
 
-interface ComponentType {
-  (props: { title: string; isOfficeInitialized: boolean }): JSX.Element;
-}
-
-const render = (Component: ComponentType): void => {
+const render = (Component: typeof App) => {
   ReactDOM.render(
-    <AppContainer>
-      <ThemeProvider>
-        <Component title={title} isOfficeInitialized={isOfficeInitialized} />
-      </ThemeProvider>
-    </AppContainer>,
+    <Component title={title} isOfficeInitialized={isOfficeInitialized} />,
     document.getElementById("container")
   );
 };
@@ -32,15 +20,14 @@ const render = (Component: ComponentType): void => {
 /* Render application after Office initializes */
 Office.onReady(() => {
   isOfficeInitialized = true;
-  logger.info("Office.js is ready");
   render(App);
-}).catch((error) => {
-  logger.error("Error during Office.js initialization:", error);
+}).catch(error => {
+  console.error('Error while initializing Office:', error);
 });
 
 if ((module as any).hot) {
   (module as any).hot.accept("./components/App", () => {
-    const NextApp = require("./components/App").default;
+    const NextApp = require("./components/App").App;
     render(NextApp);
   });
 }

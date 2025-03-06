@@ -9,6 +9,9 @@ export class OpenAIService implements IOpenAIService {
     const url = `${this.apiConfig.baseUrl}${endpoint}`;
     
     try {
+      logger.debug('Making API request to:', url);
+      logger.debug('Request body:', body);
+
       const response = await fetch(url, {
         method: 'POST',
         headers: {
@@ -18,19 +21,29 @@ export class OpenAIService implements IOpenAIService {
         body: JSON.stringify(body)
       });
 
+      const responseData = await response.json();
+      logger.debug('API response:', responseData);
+
       if (!response.ok) {
-        const errorData = await response.json();
+        const errorData = responseData;
         const error = new Error(errorData.error?.message || 'API request failed') as APIError;
         error.status = response.status;
         error.code = errorData.error?.code;
+        error.response = responseData;
         throw error;
       }
 
-      const result = await response.json();
-      return result as OpenAIResponse;
+      return responseData as OpenAIResponse;
     } catch (err) {
+      logger.error('API request failed:', err);
       const error = err instanceof Error ? err : new Error('Unknown API error occurred');
-      logger.error('API request failed', error);
+      if (err instanceof Error) {
+        logger.error('Error details:', {
+          message: err.message,
+          stack: err.stack,
+          ...(err as any).response && { response: (err as any).response }
+        });
+      }
       throw error;
     }
   }
@@ -39,22 +52,33 @@ export class OpenAIService implements IOpenAIService {
     try {
       const requestBody: OpenAIRequestBody = {
         model: this.apiConfig.model,
-        prompt,
+        messages: [
+          {
+            role: "user",
+            content: prompt
+          }
+        ],
         max_tokens: this.apiConfig.maxTokens,
         temperature: 0.7
       };
 
-      const response = await this.makeRequest('/completions', requestBody);
+      const response = await this.makeRequest('/chat/completions', requestBody);
       
       if (!response.choices || response.choices.length === 0) {
         throw new Error('No response from API');
       }
 
-      logger.debug('API response received', response);
-      return response.choices[0].text.trim();
+      // x.ai API 返回格式可能与OpenAI略有不同
+      const result = response.choices[0].message?.content || response.choices[0].text;
+      if (!result) {
+        throw new Error('Invalid response format from API');
+      }
+
+      logger.debug('Analysis result:', result);
+      return result.trim();
     } catch (err) {
       const error = err instanceof Error ? err : new Error('Unknown error during analysis');
-      logger.error('Analysis failed', error);
+      logger.error('Analysis failed:', error);
       throw error;
     }
   }

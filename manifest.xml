@@ -1,24 +1,34 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<OfficeApp xmlns="http://schemas.microsoft.com/office/appforoffice/1.1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bt="http://schemas.microsoft.com/office/officeappbasictypes/1.0" xmlns:ov="http://schemas.microsoft.com/office/taskpaneappversionoverrides" xsi:type="TaskPaneApp">
-  <Id>8c5c6510-8066-4c5a-9fb3-071ad7375f6d</Id>
+<OfficeApp 
+  xmlns="http://schemas.microsoft.com/office/appforoffice/1.1" 
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+  xmlns:bt="http://schemas.microsoft.com/office/officeappbasictypes/1.0" 
+  xmlns:ov="http://schemas.microsoft.com/office/taskpaneappversionoverrides" 
+  xsi:type="TaskPaneApp">
+
+  <Id>05c2e1c9-3e1d-406e-9a91-e9ac64854001</Id>
   <Version>1.0.0.0</Version>
-  <ProviderName>Contoso</ProviderName>
-  <DefaultLocale>en-US</DefaultLocale>
-  <DisplayName DefaultValue="Excel Finance GPT"/>
-  <Description DefaultValue="Analyze financial data using GPT"/>
+  <ProviderName>Excel Finance GPT</ProviderName>
+  <DefaultLocale>zh-CN</DefaultLocale>
+  <DisplayName DefaultValue="Excel Finance Assistant"/>
+  <Description DefaultValue="Smart financial data analysis using GPT"/>
   <IconUrl DefaultValue="https://localhost:3000/assets/icon-32.png"/>
   <HighResolutionIconUrl DefaultValue="https://localhost:3000/assets/icon-64.png"/>
-  <SupportUrl DefaultValue="https://www.contoso.com/help"/>
+  
   <AppDomains>
-    <AppDomain>https://www.contoso.com</AppDomain>
+    <AppDomain>https://localhost:3000</AppDomain>
   </AppDomains>
+
   <Hosts>
     <Host Name="Workbook"/>
   </Hosts>
+
   <DefaultSettings>
     <SourceLocation DefaultValue="https://localhost:3000/taskpane.html"/>
   </DefaultSettings>
+
   <Permissions>ReadWriteDocument</Permissions>
+
   <VersionOverrides xmlns="http://schemas.microsoft.com/office/taskpaneappversionoverrides" xsi:type="VersionOverridesV1_0">
     <Hosts>
       <Host xsi:type="Workbook">
@@ -28,21 +38,20 @@
             <Description resid="GetStarted.Description"/>
             <LearnMoreUrl resid="GetStarted.LearnMoreUrl"/>
           </GetStarted>
-          <FunctionFile resid="Commands.Url"/>
           <ExtensionPoint xsi:type="PrimaryCommandSurface">
-            <CustomTab id="ExcelFinanceGPT.Tab">
-              <Group id="ExcelFinanceGPT.Group">
-                <Label resid="ExcelFinanceGPT.Group.Label"/>
+            <OfficeTab id="TabHome">
+              <Group id="CommandsGroup">
+                <Label resid="CommandsGroup.Label"/>
                 <Icon>
                   <bt:Image size="16" resid="Icon.16x16"/>
                   <bt:Image size="32" resid="Icon.32x32"/>
                   <bt:Image size="80" resid="Icon.80x80"/>
                 </Icon>
-                <Control xsi:type="Button" id="ExcelFinanceGPT.TaskpaneButton">
-                  <Label resid="ExcelFinanceGPT.TaskpaneButton.Label"/>
+                <Control xsi:type="Button" id="TaskpaneButton">
+                  <Label resid="TaskpaneButton.Label"/>
                   <Supertip>
-                    <Title resid="ExcelFinanceGPT.TaskpaneButton.Label"/>
-                    <Description resid="ExcelFinanceGPT.TaskpaneButton.Tooltip"/>
+                    <Title resid="TaskpaneButton.Label"/>
+                    <Description resid="TaskpaneButton.Tooltip"/>
                   </Supertip>
                   <Icon>
                     <bt:Image size="16" resid="Icon.16x16"/>
@@ -55,8 +64,7 @@
                   </Action>
                 </Control>
               </Group>
-              <Label resid="ExcelFinanceGPT.Tab.Label"/>
-            </CustomTab>
+            </OfficeTab>
           </ExtensionPoint>
         </DesktopFormFactor>
       </Host>
@@ -69,18 +77,16 @@
       </bt:Images>
       <bt:Urls>
         <bt:Url id="GetStarted.LearnMoreUrl" DefaultValue="https://go.microsoft.com/fwlink/?LinkId=276812"/>
-        <bt:Url id="Commands.Url" DefaultValue="https://localhost:3000/commands.html"/>
         <bt:Url id="Taskpane.Url" DefaultValue="https://localhost:3000/taskpane.html"/>
       </bt:Urls>
       <bt:ShortStrings>
-        <bt:String id="GetStarted.Title" DefaultValue="Get started with Excel Finance GPT!"/>
-        <bt:String id="ExcelFinanceGPT.Tab.Label" DefaultValue="Finance GPT"/>
-        <bt:String id="ExcelFinanceGPT.Group.Label" DefaultValue="Analysis Tools"/>
-        <bt:String id="ExcelFinanceGPT.TaskpaneButton.Label" DefaultValue="Analyze Data"/>
+        <bt:String id="GetStarted.Title" DefaultValue="Finance Assistant"/>
+        <bt:String id="CommandsGroup.Label" DefaultValue="Analysis"/>
+        <bt:String id="TaskpaneButton.Label" DefaultValue="Analysis"/>
       </bt:ShortStrings>
       <bt:LongStrings>
-        <bt:String id="GetStarted.Description" DefaultValue="Your add-in is now ready to use! Click the 'Analyze Data' button to get started."/>
-        <bt:String id="ExcelFinanceGPT.TaskpaneButton.Tooltip" DefaultValue="Click to analyze financial data using GPT"/>
+        <bt:String id="GetStarted.Description" DefaultValue="The add-in is now loaded. Go to the HOME tab and click the 'Analysis' button to get started."/>
+        <bt:String id="TaskpaneButton.Tooltip" DefaultValue="Click to open the analysis panel"/>
       </bt:LongStrings>
     </Resources>
   </VersionOverrides>
