@@ -8,6 +8,9 @@ export interface OpenAIChoice {
   message?: {
     content: string;
   };
+  delta?: {
+    content: string;
+  };
   index: number;
   finish_reason?: string;
 }
@@ -26,6 +29,7 @@ export interface OpenAIRequestBody {
   prompt?: string;
   max_tokens: number;
   temperature?: number;
+  stream?: boolean;
 }
 
 export interface APIError extends Error {
@@ -34,10 +38,34 @@ export interface APIError extends Error {
   response?: any;
 }
 
+export interface DataRange {
+  sheetName: string;
+  range: string;
+  label?: string;
+}
+
+export interface SheetInfo {
+  id: string;
+  name: string;
+  visible: boolean;
+}
+
+export interface RangeData {
+  range: DataRange;
+  values: any[][];
+}
+
+export interface MultiRangeData {
+  ranges: RangeData[];
+}
+
 export interface ExcelService {
+  getSheetsList(): Promise<SheetInfo[]>;
   getDataFromRange(range: string): Promise<any[][]>;
+  getDataFromSheetRange(sheetName: string, range: string): Promise<any[][]>;
+  getMultiRangeData(ranges: DataRange[]): Promise<MultiRangeData>;
 }
 
 export interface OpenAIService {
-  analyze(prompt: string): Promise<string>;
+  analyze(prompt: string, onProgress?: (text: string) => void): Promise<string>;
 }

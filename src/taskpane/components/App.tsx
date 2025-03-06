@@ -1,5 +1,5 @@
 import * as React from "react";
-import { DefaultButton, Label, Stack, Text } from "@fluentui/react";
+import { Stack, Text, getTheme, IStackStyles, DefaultButton, Label } from "@fluentui/react";
 import { FinanceAnalyzer } from "./FinanceAnalyzer";
 import Progress from "./Progress";
 
@@ -9,6 +9,40 @@ export interface AppProps {
   title: string;
   isOfficeInitialized: boolean;
 }
+
+const theme = getTheme();
+
+const containerStyles: IStackStyles = {
+  root: {
+    height: '100vh',
+    padding: 0,
+    margin: 0,
+    overflow: 'hidden',
+    backgroundColor: theme.palette.white
+  }
+};
+
+const innerContainerStyles: IStackStyles = {
+  root: {
+    height: '100%',
+    overflow: 'hidden'
+  }
+};
+
+const headerStyles: IStackStyles = {
+  root: {
+    padding: '8px 16px',
+    borderBottom: `1px solid ${theme.palette.neutralLight}`
+  }
+};
+
+const rangeSelectionStyles: IStackStyles = {
+  root: {
+    padding: '8px 16px',
+    borderBottom: `1px solid ${theme.palette.neutralLight}`,
+    backgroundColor: theme.palette.neutralLighterAlt
+  }
+};
 
 export const App: React.FC<AppProps> = ({ title, isOfficeInitialized }) => {
   const [isAnalyzing, setIsAnalyzing] = React.useState(false);
@@ -38,49 +72,54 @@ export const App: React.FC<AppProps> = ({ title, isOfficeInitialized }) => {
   }
 
   return (
-    <Stack tokens={{ padding: '8px', childrenGap: 8 }}>
-      <Stack.Item>
-        <Text variant="xLarge" block styles={{
-          root: {
-            fontWeight: '600',
-            marginBottom: '8px'
-          }
-        }}>
-          Excel 财务分析助手
-        </Text>
-      </Stack.Item>
+    <Stack styles={containerStyles}>
+      <Stack styles={innerContainerStyles}>
+        <Stack.Item>
+          <Stack styles={headerStyles}>
+            <Text
+              variant="xLarge"
+              styles={{
+                root: {
+                  color: theme.palette.themePrimary,
+                  fontWeight: 600
+                }
+              }}
+            >
+              Excel分析助手
+            </Text>
+          </Stack>
+        </Stack.Item>
 
-      <Stack.Item>
-        <Stack horizontal verticalAlign="center" tokens={{ childrenGap: 8 }}>
-          <DefaultButton 
-            onClick={handleGetCurrentRange}
-            iconProps={{ iconName: 'Table' }}
-          >
-            选取数据区域
-          </DefaultButton>
-          {selectedRange && (
-            <Label styles={{
-              root: {
-                marginLeft: '8px',
-                fontSize: '14px',
-                color: '#217346'
-              }
-            }}>
-              当前选择: {selectedRange}
+        <Stack.Item>
+          <Stack horizontal verticalAlign="center" styles={rangeSelectionStyles} tokens={{ childrenGap: 16 }}>
+            <DefaultButton
+              onClick={handleGetCurrentRange}
+              iconProps={{ iconName: 'TableComputed' }}
+            >
+              选择数据区域
+            </DefaultButton>
+            <Label
+              styles={{
+                root: {
+                  color: theme.palette.themePrimary,
+                  fontSize: '13px',
+                  fontWeight: 400
+                }
+              }}
+            >
+              {selectedRange ? `当前选择：${selectedRange}` : '请选择要分析的数据区域'}
             </Label>
-          )}
-        </Stack>
-      </Stack.Item>
+          </Stack>
+        </Stack.Item>
 
-      <Stack.Item grow>
-        {selectedRange && (
-          <FinanceAnalyzer 
+        <Stack.Item grow>
+          <FinanceAnalyzer
             range={selectedRange}
             isAnalyzing={isAnalyzing}
             setIsAnalyzing={setIsAnalyzing}
           />
-        )}
-      </Stack.Item>
+        </Stack.Item>
+      </Stack>
     </Stack>
   );
 };

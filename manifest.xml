@@ -8,10 +8,10 @@
 
   <Id>05c2e1c9-3e1d-406e-9a91-e9ac64854001</Id>
   <Version>1.0.0.0</Version>
-  <ProviderName>Excel Finance GPT</ProviderName>
+  <ProviderName>Excel GPT</ProviderName>
   <DefaultLocale>zh-CN</DefaultLocale>
-  <DisplayName DefaultValue="Excel Finance Assistant"/>
-  <Description DefaultValue="Smart financial data analysis using GPT"/>
+  <DisplayName DefaultValue="Excel 分析助手"/>
+  <Description DefaultValue="智能数据分析工具"/>
   <IconUrl DefaultValue="https://localhost:3000/assets/icon-32.png"/>
   <HighResolutionIconUrl DefaultValue="https://localhost:3000/assets/icon-64.png"/>
   
@@ -80,13 +80,13 @@
         <bt:Url id="Taskpane.Url" DefaultValue="https://localhost:3000/taskpane.html"/>
       </bt:Urls>
       <bt:ShortStrings>
-        <bt:String id="GetStarted.Title" DefaultValue="Finance Assistant"/>
-        <bt:String id="CommandsGroup.Label" DefaultValue="Analysis"/>
-        <bt:String id="TaskpaneButton.Label" DefaultValue="Analysis"/>
+        <bt:String id="GetStarted.Title" DefaultValue="Excel分析助手"/>
+        <bt:String id="CommandsGroup.Label" DefaultValue="数据分析"/>
+        <bt:String id="TaskpaneButton.Label" DefaultValue="数据分析"/>
       </bt:ShortStrings>
       <bt:LongStrings>
-        <bt:String id="GetStarted.Description" DefaultValue="The add-in is now loaded. Go to the HOME tab and click the 'Analysis' button to get started."/>
-        <bt:String id="TaskpaneButton.Tooltip" DefaultValue="Click to open the analysis panel"/>
+        <bt:String id="GetStarted.Description" DefaultValue="加载项已成功加载。点击'开始'选项卡中的'数据分析'按钮开始使用。"/>
+        <bt:String id="TaskpaneButton.Tooltip" DefaultValue="点击打开数据分析面板"/>
       </bt:LongStrings>
     </Resources>
   </VersionOverrides>
